@@ -3,9 +3,10 @@ import ThemeProvider from '@/contexts/ThemeContext'
 import { PortalHost } from '@rn-primitives/portal'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import '../global.css'
 
 export default function RootLayout() {
@@ -13,26 +14,29 @@ export default function RootLayout() {
   const colors = useThemeColors()
 
   return (
-    // <ClerkProvider
-    //   tokenCache={tokenCache}
-    //   publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    // >
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView
-        className={`bg-background  ${Platform.OS === 'ios' ? 'pb-0 ' : ''}`}
-        style={{ flex: 1 }}
-      >
-        <ThemeProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.bg },
+      <ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaView
+            edges={['top']}
+            style={{
+              flex: 1,
+              backgroundColor: colors.bg,
             }}
-          />
-          <PortalHost />
-        </ThemeProvider>
-      </GestureHandlerRootView>
+          >
+            <StatusBar style={colors.isDark ? 'light' : 'dark'} />
+
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.bg },
+              }}
+            />
+
+            <PortalHost />
+          </SafeAreaView>
+        </GestureHandlerRootView>
+      </ThemeProvider>
     </QueryClientProvider>
-    // </ClerkProvider>
   )
 }

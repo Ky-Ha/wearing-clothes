@@ -6,7 +6,7 @@ import { BodyPhotoPicker } from '@/components/style-swap/body-photo-picker'
 import { SampleItems } from '@/components/style-swap/sample-items'
 import { StyleDescription } from '@/components/style-swap/style-description'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 export default function StyleSwapScreen() {
   const [image, setImage] = useState<string | null>(null)
@@ -16,41 +16,45 @@ export default function StyleSwapScreen() {
     console.log('Generating StyleSwap')
   }
   return (
-    <ThemedScroller className="bg-white px-5">
-      <Text className="text-red-500">QQ</Text>
-      <ThemedText className="text-xl font-semibold text-center my-5">
-        StyleSwap
-      </ThemedText>
+    <ThemedScroller className="flex-1">
+      <View className="flex-1">
+        <ThemedText className="text-xl font-semibold text-center my-5">
+          StyleSwap
+        </ThemedText>
 
-      <ThemedText className="font-semibold text-base">Body Photo</ThemedText>
-      <ThemedText className="text-gray-500 mb-3">
-        Upload a photo of yourself for the try-on
-      </ThemedText>
+        <ThemedText className="font-semibold text-base">Body Photo</ThemedText>
+        <ThemedText className="text-gray-500 mb-3">
+          Upload a photo of yourself for the try-on
+        </ThemedText>
 
-      <BodyPhotoPicker image={image} onChange={setImage} />
+        <BodyPhotoPicker image={image} onChange={setImage} />
 
-      <ThemedText className="font-semibold text-base mt-5">
-        Sample Items
-      </ThemedText>
-      <SampleItems />
+        <ThemedText className="font-semibold text-base mt-5">
+          Sample Items
+        </ThemedText>
+        <SampleItems />
+      </View>
 
-      <ThemedText className="font-semibold text-base mt-5">
-        Describe Your Style Request (Optional)
-      </ThemedText>
-      <StyleDescription value={description} onChange={setDescription} />
-
-      <TouchableOpacity onPress={handleGenerate} activeOpacity={0.85}>
-        <LinearGradient
-          colors={['#F8C3D0', '#C9B6FF']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          className="rounded-xl py-4 items-center mt-6"
-        >
-          <ThemedText className=" font-semibold text-base">
-            Generate StyleSwap
-          </ThemedText>
-        </LinearGradient>
-      </TouchableOpacity>
+      <View className="flex-1">
+        <ThemedText className="font-semibold text-base mt-5">
+          Describe Your Style Request (Optional)
+        </ThemedText>
+        <StyleDescription value={description} onChange={setDescription} />
+      </View>
+      <View className="absolute bottom-3 left-0 right-0 px-4 pb-6 bg-background">
+        <TouchableOpacity onPress={handleGenerate} activeOpacity={0.85}>
+          <LinearGradient
+            colors={['#F8C3D0', '#C9B6FF']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className="rounded-xl py-4 items-center mt-6"
+          >
+            <ThemedText className=" font-semibold text-base">
+              Generate StyleSwap
+            </ThemedText>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </ThemedScroller>
   )
 }
