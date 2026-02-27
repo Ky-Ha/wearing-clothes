@@ -1,24 +1,38 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import useThemeColors from '@/contexts/ThemeColors'
+import ThemeProvider from '@/contexts/ThemeContext'
+import { PortalHost } from '@rn-primitives/portal'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Stack } from 'expo-router'
+import React from 'react'
+import { Platform } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import '../global.css'
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const queryClient = new QueryClient()
+  const colors = useThemeColors()
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    // <ClerkProvider
+    //   tokenCache={tokenCache}
+    //   publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    // >
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView
+        className={`bg-background  ${Platform.OS === 'ios' ? 'pb-0 ' : ''}`}
+        style={{ flex: 1 }}
+      >
+        <ThemeProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: colors.bg },
+            }}
+          />
+          <PortalHost />
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
+    // </ClerkProvider>
+  )
 }

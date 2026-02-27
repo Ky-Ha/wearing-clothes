@@ -1,35 +1,31 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { TabButton } from '@/components/TabButton'
+import useThemeColors from '@/contexts/ThemeColors'
+import { shadowPresets } from '@/utils/useShadow'
+import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui'
+import React from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function Layout() {
+  const colors = useThemeColors()
+  const insets = useSafeAreaInsets()
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+    <Tabs>
+      <TabSlot />
+      <TabList
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.secondary,
+          paddingBottom: insets.bottom,
+          ...shadowPresets.large,
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      >
+        {/* Home Tab */}
+        <TabTrigger name="index" href="/" asChild>
+          <TabButton labelAnimated={true} icon="Navigation">
+            Discover
+          </TabButton>
+        </TabTrigger>
+      </TabList>
     </Tabs>
-  );
+  )
 }
