@@ -1,11 +1,10 @@
 import ThemedScroller from '@/components/ThemeScroller'
 import ThemedText from '@/components/ThemedText'
-import { useState } from 'react'
-
-import { BodyPhotoPicker } from '@/components/style-swap/body-photo-picker'
+import BodyPhotoPicker from '@/components/style-swap/body-photo-picker'
 import { SampleItems } from '@/components/style-swap/sample-items'
 import { StyleDescription } from '@/components/style-swap/style-description'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 export default function StyleSwapScreen() {
@@ -27,7 +26,7 @@ export default function StyleSwapScreen() {
           Upload a photo of yourself for the try-on
         </ThemedText>
 
-        <BodyPhotoPicker image={image} onChange={setImage} />
+        <BodyPhotoPicker setImage={setImage} />
 
         <ThemedText className="font-semibold text-base mt-5">
           Sample Items
@@ -41,15 +40,19 @@ export default function StyleSwapScreen() {
         </ThemedText>
         <StyleDescription value={description} onChange={setDescription} />
       </View>
-      <View className="absolute bottom-3 left-0 right-0 px-4 pb-6 bg-background">
-        <TouchableOpacity onPress={handleGenerate} activeOpacity={0.85}>
+      <View className="absolute bottom-3 left-0 right-0 px-4 pb-6">
+        <TouchableOpacity
+          onPress={handleGenerate}
+          activeOpacity={0.85}
+          className="rounded-2xl overflow-hidden"
+        >
           <LinearGradient
             colors={['#F8C3D0', '#C9B6FF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            className="rounded-xl py-4 items-center mt-6"
+            className="py-4 items-center"
           >
-            <ThemedText className=" font-semibold text-base">
+            <ThemedText className="font-semibold text-base">
               Generate StyleSwap
             </ThemedText>
           </LinearGradient>
