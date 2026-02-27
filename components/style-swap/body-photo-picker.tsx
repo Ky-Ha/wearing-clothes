@@ -1,18 +1,17 @@
+import { useImageStore } from '@/store/data'
 import { Ionicons } from '@expo/vector-icons'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as ImagePicker from 'expo-image-picker'
 import { Camera } from 'lucide-react-native'
-
 import React from 'react'
-import { Alert, Text, TouchableOpacity, View } from 'react-native'
-
-type Props = {
-  setImage: React.Dispatch<React.SetStateAction<string | null>>
-}
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+const MAX_IMAGES = 3
 
-export default function BodyPhotoPicker({ setImage }: Props) {
+export default function BodyPhotoPicker() {
+  const { images, setImages, removeImage } = useImageStore()
+
   const pickImage = async (
     requestPermission: () => Promise<{ granted: boolean }>,
     launch: (
@@ -21,6 +20,11 @@ export default function BodyPhotoPicker({ setImage }: Props) {
     permissionMessage: string,
     additionalOptions: ImagePicker.ImagePickerOptions = {},
   ) => {
+    if (images.length >= MAX_IMAGES) {
+      Alert.alert('Maximum Reached', 'You can only upload up to 3 images.')
+      return
+    }
+
     const { granted } = await requestPermission()
     if (!granted) {
       Alert.alert('Permission required', permissionMessage)
@@ -42,11 +46,12 @@ export default function BodyPhotoPicker({ setImage }: Props) {
       // Validate file size using expo-file-system
       const fileInfo = await FileSystem.getInfoAsync(asset.uri)
 
-      if (!fileInfo.exists) return
+      if (!('exists' in fileInfo) || !fileInfo.exists || !('size' in fileInfo))
+        return
 
       const size = fileInfo.size ?? 0
 
-      if (fileInfo.exists && fileInfo.size && size > MAX_FILE_SIZE) {
+      if (size > MAX_FILE_SIZE) {
         Alert.alert(
           'Image Too Large',
           'The selected image is too large. Please take a closer photo or select a smaller image.',
@@ -63,7 +68,7 @@ export default function BodyPhotoPicker({ setImage }: Props) {
         image = asset.uri
       }
 
-      setImage(image)
+      setImages([...images, image])
     } catch (error) {
       console.error('Error picking or processing image:', error)
       Alert.alert('Error', 'Failed to pick or process image. Please try again.')
@@ -71,42 +76,83 @@ export default function BodyPhotoPicker({ setImage }: Props) {
   }
 
   return (
-    <View className="flex-1 relative">
+    <View className="flex-1 bg-red-400">
       {/* ===== TOP (FIXED) ===== */}
 
-      <TouchableOpacity
-        className="bg-white border-2 border-dashed border-gray-300 rounded-2xl p-8 items-center justify-center min-h-[300px]"
-        onPress={() =>
-          pickImage(
-            ImagePicker.requestMediaLibraryPermissionsAsync,
-            ImagePicker.launchImageLibraryAsync,
-            'Gallery access is needed to upload photos.',
-            { mediaTypes: ImagePicker.MediaTypeOptions.Images },
-          )
-        }
-      >
-        <Ionicons name="add" size={32} color="#9ca3af" />
-        <Text className="mt-2 font-medium">Upload photo</Text>
-        <Text className="text-gray-500">from gallery</Text>
-      </TouchableOpacity>
+      <View className="flex-row flex-wrap gap-3">
+        {images.map((img, index) => (
+          <View
+            key={index}
+            className="relative w-[31%] aspect-[1/3] rounded-2xl overflow-hidden"
+          >
+            <Image
+              source={{ uri: img }}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
+            <TouchableOpacity
+              onPress={() => removeImage(index)}
+              className="absolute top-2 right-1 bg-black/70 rounded-full p-1"
+            >
+              <Ionicons name="close" size={18} color="white" />
+            </TouchableOpacity>
 
-      {/* ===== BOTTOM (FIXED) ===== */}
+            <TouchableOpacity
+              onPress={() =>
+                pickImage(
+                  ImagePicker.requestCameraPermissionsAsync,
+                  ImagePicker.launchCameraAsync,
+                  'Camera access is needed to take photos.',
+                )
+              }
+              className="flex-col items-center absolute bottom-3 right-1"
+            >
+              <View className="w-11 h-11  rounded-full items-center justify-center bg">
+                <Camera size={25} color={'black'} strokeWidth={2} />
+              </View>
+              <Text className="text-gray-300 text-xs">Camera</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
 
-      <TouchableOpacity
-        onPress={() =>
-          pickImage(
-            ImagePicker.requestCameraPermissionsAsync,
-            ImagePicker.launchCameraAsync,
-            'Camera access is needed to take photos.',
-          )
-        }
-        className="flex-col items-center absolute bottom-20 right-4"
-      >
-        <View className="w-11 h-11  rounded-full items-center justify-center bg">
-          <Camera size={27} color={'black'} strokeWidth={2} />
-        </View>
-        <Text>Camera</Text>
-      </TouchableOpacity>
+        {/* Upload slot - only show when < 3 images */}
+        {images.length < 3 && (
+          <TouchableOpacity
+            onPress={() =>
+              pickImage(
+                ImagePicker.requestMediaLibraryPermissionsAsync,
+                ImagePicker.launchImageLibraryAsync,
+                'Gallery access is needed to upload photos.',
+              )
+            }
+            className="w-[31%] aspect-[1/3] border-2 border-dashed border-gray-300 rounded-2xl items-center justify-center"
+            style={
+              images.length === 0 && {
+                width: '100%',
+                aspectRatio: '1/1',
+                height: '100%',
+              }
+            }
+          >
+            <Ionicons name="add" size={40} color="#5834eb" />
+            <TouchableOpacity
+              onPress={() =>
+                pickImage(
+                  ImagePicker.requestCameraPermissionsAsync,
+                  ImagePicker.launchCameraAsync,
+                  'Camera access is needed to take photos.',
+                )
+              }
+              className="flex-col items-center absolute bottom-3 right-1"
+            >
+              <View className="w-11 h-11  rounded-full items-center justify-center bg">
+                <Camera size={25} color={'black'} strokeWidth={2} />
+              </View>
+              <Text className="text-gray-300 text-xs">Camera</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   )
 }

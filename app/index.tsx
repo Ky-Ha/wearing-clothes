@@ -8,7 +8,6 @@ import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 export default function StyleSwapScreen() {
-  const [image, setImage] = useState<string | null>(null)
   const [description, setDescription] = useState('')
 
   const handleGenerate = () => {
@@ -26,7 +25,7 @@ export default function StyleSwapScreen() {
           Upload a photo of yourself for the try-on
         </ThemedText>
 
-        <BodyPhotoPicker setImage={setImage} />
+        <BodyPhotoPicker />
 
         <ThemedText className="font-semibold text-base mt-5">
           Sample Items
