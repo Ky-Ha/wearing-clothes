@@ -77,12 +77,11 @@ export default function ItemPhotoPicker() {
   return (
     <View className="flex-1 mt-2">
       {/* ===== TOP (FIXED) ===== */}
-
       <View className="flex-row flex-wrap gap-3">
         {images.map((img, index) => (
           <View
             key={index}
-            className="w-16 h-16 m-1 rounded-full border border-gray-300 items-center justify-center"
+            className="w-16 h-16 rounded-full border border-gray-300 items-center justify-center overflow-hidden"
           >
             <Image
               source={{ uri: img }}
