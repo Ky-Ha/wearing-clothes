@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-interface ImageStore {
+interface ItemStore {
   images: string[] // array of base64 or uri strings
   addImage: (image: string) => void
   removeImage: (index: number) => void
@@ -8,7 +8,7 @@ interface ImageStore {
   clearImages: () => void
 }
 
-export const useImageStore = create<ImageStore>((set) => ({
+export const useItemStore = create<ItemStore>((set) => ({
   images: [],
 
   addImage: (image) =>

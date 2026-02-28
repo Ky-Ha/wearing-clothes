@@ -1,4 +1,4 @@
-import { useImageStore } from '@/store/data'
+import { useBodyStore } from '@/store/body'
 import { Ionicons } from '@expo/vector-icons'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as ImagePicker from 'expo-image-picker'
@@ -10,7 +10,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 const MAX_IMAGES = 3
 
 export default function BodyPhotoPicker() {
-  const { images, setImages, removeImage } = useImageStore()
+  const { images, setImages, removeImage } = useBodyStore()
 
   const pickImage = async (
     requestPermission: () => Promise<{ granted: boolean }>,
@@ -76,7 +76,7 @@ export default function BodyPhotoPicker() {
   }
 
   return (
-    <View className="flex-1 bg-red-400">
+    <View className="flex-1">
       {/* ===== TOP (FIXED) ===== */}
 
       <View className="flex-row flex-wrap gap-3">
@@ -95,22 +95,6 @@ export default function BodyPhotoPicker() {
               className="absolute top-2 right-1 bg-black/70 rounded-full p-1"
             >
               <Ionicons name="close" size={18} color="white" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                pickImage(
-                  ImagePicker.requestCameraPermissionsAsync,
-                  ImagePicker.launchCameraAsync,
-                  'Camera access is needed to take photos.',
-                )
-              }
-              className="flex-col items-center absolute bottom-3 right-1"
-            >
-              <View className="w-11 h-11  rounded-full items-center justify-center bg">
-                <Camera size={25} color={'black'} strokeWidth={2} />
-              </View>
-              <Text className="text-gray-300 text-xs">Camera</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -135,6 +119,8 @@ export default function BodyPhotoPicker() {
             }
           >
             <Ionicons name="add" size={40} color="#5834eb" />
+            <Text className="font-semibold text-base">Tap to add photo</Text>
+            <Text className="text-gray-500 text-sm mt-1">Add Photo</Text>
             <TouchableOpacity
               onPress={() =>
                 pickImage(

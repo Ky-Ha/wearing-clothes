@@ -1,7 +1,7 @@
 import ThemedScroller from '@/components/ThemeScroller'
 import ThemedText from '@/components/ThemedText'
-import BodyPhotoPicker from '@/components/style-swap/body-photo-picker'
-import { SampleItems } from '@/components/style-swap/sample-items'
+import BodyPhotoPicker from '@/components/style-swap/body-photo'
+import ItemPhotoPicker from '@/components/style-swap/item-photo'
 import { StyleDescription } from '@/components/style-swap/style-description'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useState } from 'react'
@@ -30,7 +30,7 @@ export default function StyleSwapScreen() {
         <ThemedText className="font-semibold text-base mt-5">
           Sample Items
         </ThemedText>
-        <SampleItems />
+        <ItemPhotoPicker />
       </View>
 
       <View className="flex-1">
