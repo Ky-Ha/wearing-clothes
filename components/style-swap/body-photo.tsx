@@ -119,7 +119,7 @@ export default function BodyPhotoPicker() {
             }
           >
             <Ionicons name="add" size={40} color="#5834eb" />
-            <Text className="font-semibold text-base">Tap to add photo</Text>
+            <Text className="font-semibold text-base">Tap</Text>
             <Text className="text-gray-500 text-sm mt-1">Add Photo</Text>
             <TouchableOpacity
               onPress={() =>
