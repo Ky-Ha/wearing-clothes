@@ -11,5 +11,5 @@ export const generateResult = async (
     description,
   })
 
-  return res.data
+  return res.data.image
 }

@@ -30,11 +30,13 @@ export default function GenerateButton({ description }: GenerateButtonProps) {
       description: string
     }) => generateResult(bodyImages, itemImages, description),
 
-    onSuccess: () => {
+    onSuccess: (image) => {
+      // console.log('Generated image:', image)
       setItemImages(itemImages)
 
       // ✅ fake result for now
-      setResultImage(require('@/assets/images/fake-result.png'))
+      // setResultImage(require('@/assets/images/fake-result.png'))
+      setResultImage(image)
 
       router.push('/screens/result')
     },
